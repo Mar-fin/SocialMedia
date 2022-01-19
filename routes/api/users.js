@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const gravatar = require('gravatar');
-const bcrypt = require('bcrypt');
-const { check, validationResult } = require('express-validator/check');
+const bcrypt = require('bcryptjs');
+const { check, validationResult } = require('express-validator');
 
 //User Models
-const User = require('../../models/User');
+const User = require('../../models/Users');
 
 // @route   POST api/users
 // @desc    Register user
@@ -29,38 +29,43 @@ router.post(
     const { name, email, password } = req.body;
 
     try {
-        //See if User exists
-        let user = await User.findOne({email});
+      //See if User exists
+      let user = await User.findOne({ email });
 
-        if (User) {
-            res.status(400).json({ errors: [{ msg: 'User already exists' }] });
-        }
+      if (user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'User already exists' }] });
+      }
 
-        //Get users gravatar
-        const avatar = gravatar.url(email, {
-          s: 200,
-          r: pg,
-          d: mm
-        })
+      //Get users gravatar
+      const avatar = gravatar.url(email, {
+        s: 200,
+        r: pg,
+        d: mm,
+      });
 
-        user = new User ({
-          name,
-          email,
-          avatar,
-          password
-        });
+      user = new User({
+        name,
+        email,
+        avatar,
+        password,
+      });
 
-        //Encrypt password
+      //Encrypt password
+      const salt = await bcrypt.genSalt(10);
 
-        //Return jsonwebtoken
+      user.password = await bcrypt.hash(password, salt);
 
-        res.send('User route');
+      await user.save();
 
-    } catch(err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-     }
-  
+      //Return jsonwebtoken
+
+      res.send('User registered');
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
   }
 );
 
