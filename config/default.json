@@ -1,5 +1,7 @@
 {
   "mongoURI": "mongodb+srv://Marfin:098765@social-media.32sjs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
 
-  "jwtSecret": "mysecrettoken"
+  "jwtSecret": "mysecrettoken",
+  "githubClientId": "bf000d675aa9d8e54979",
+  "githubSecret": "208947875692032b42eec3e318ea946508a07557"
 }
