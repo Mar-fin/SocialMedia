@@ -20,8 +20,6 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    //console.log('works till here');
-
     try {
       const user = await User.findById(req.user.id).select('-password');
 
@@ -31,7 +29,6 @@ router.post(
         avatar: user.avatar,
         user: req.user.id,
       });
-      //console.log(newPost);
 
       const post = await newPost.save();
 
