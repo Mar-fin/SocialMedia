@@ -14,6 +14,7 @@ Alert.propTypes = {
   alerts: PropTypes.array.isRequired,
 };
 
+//Get the alerts state - fetching the array we saw in redux devtools
 const mapStateToProps = (state) => ({
   alerts: state.alert,
 });
